@@ -1,13 +1,18 @@
 #include <iostream>
-#include "vec3.h"
-#include "ray.h"
+#include "Vec3.h"
+#include "Ray.h"
+#include "Sphere.h"
 
 using namespace toyrenderer;
-vec3 color(const ray& r)
+Vec3 color(const Ray& r)
 {
-    vec3 unit_direction = unit_vector(r.getDirection());
+    Sphere sphere(Vec3(0,0,0), 0.5);
+    if(sphere.isIntersecting(r))
+        return Vec3(1,0,0);
+    
+    Vec3 unit_direction = r.getDirection().unit_vector();
     real t = 0.5*(unit_direction.y()) + 1.0;
-    return (1.0-t) * vec3(1.0, 1.0, 1.0) + t *vec3(0.5, 0.7, 1.0);
+    return (1.0-t) * Vec3(1.0, 1.0, 1.0) + t *Vec3(0.5, 0.7, 1.0);
 
 }
 
@@ -18,10 +23,10 @@ int main()
     int ny = 100;
     
     std::cout << "P3\n"  << nx << " " << ny << "\n255\n";
-    vec3 lower_left_corner(-2.0, -1.0, -1.0);
-    vec3 horizontal(4.0, 0.0, 0.0);
-    vec3 vertical(0.0, 2.0, 0.0);
-    vec3 origin(0.0, 0.0, 0.0);
+    Vec3 lower_left_corner(-2.0, -1.0, -1.0);
+    Vec3 horizontal(4.0, 0.0, 0.0);
+    Vec3 vertical(0.0, 2.0, 0.0);
+    Vec3 origin(0.0, 0.0, 0.0);
 
     for(int i = ny-1; i >=0 ; i--)
     {
@@ -29,8 +34,8 @@ int main()
         {
             real u = real(i) / real(nx);
             real v = real(j) / real(ny);
-            ray r(origin,  lower_left_corner + u * horizontal + v * vertical);
-            vec3 col = color(r);
+            Ray r(origin,  lower_left_corner + u * horizontal + v * vertical);
+            Vec3 col = color(r);
             int ir = int(255.99 * col.x());
             int ig = int(255.99 * col.y());
             int ib = int(255.99 * col.z());
