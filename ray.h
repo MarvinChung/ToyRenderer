@@ -1,30 +1,32 @@
-#include "vec3.h"
+#pragma once
+#include "Vec3.h"
+#include "limits"
 
 namespace toyrenderer{
 
-class ray{
+class Ray{
     private:
-        vec3 m_origin;
-        vec3 m_direction;
+        Vec3 m_origin;
+        Vec3 m_direction;
     public:
-        ray(){};
-        ray(const vec3& a, const vec3& b)
+        Ray(){};
+        Ray(const Vec3& a, const Vec3& b)
         {
             m_origin = a;
             m_direction = b;
         }
         
-        vec3 getDirection() const
+        Vec3 getDirection() const
         {
             return m_direction;
         }
 
-        vec3 getOrigin() const
+        Vec3 getOrigin() const
         {
             return m_origin;
         }
 
-        vec3 pointAtT(float t) const
+        Vec3 pointAtT(float t) const
         {
             return m_origin + t * m_direction;
         }
