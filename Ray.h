@@ -2,7 +2,7 @@
 #include "Vec3.h"
 #include "limits"
 
-namespace toyrenderer{
+namespace ToyRenderer{
 
 class Ray{
     private:

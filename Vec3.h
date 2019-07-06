@@ -2,7 +2,7 @@
 #include<iostream>
 #include <cmath>
 
-namespace toyrenderer
+namespace ToyRenderer
 {
 
 typedef float real;
