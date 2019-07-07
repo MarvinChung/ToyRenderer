@@ -1,7 +1,7 @@
 #pragma once
 #include "Ray.h"
 
-namespace toyrenderer{
+namespace ToyRenderer{
 
 class Camera
 {

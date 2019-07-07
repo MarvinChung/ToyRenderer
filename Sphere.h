@@ -1,16 +1,18 @@
 #pragma once
 #include "Hitable.h"
 
-namespace toyrenderer{
+namespace ToyRenderer{
 
 class Sphere : public Hitable
 {
 private:
     Vec3 m_center;
     float m_radius;
+    Material *m_matPtr;
 public:
     Sphere():m_center(Vec3(0,0,0)), m_radius(0){};
     Sphere(Vec3 center, float radius) : m_center(center), m_radius(radius){};
+    Sphere(Vec3 center, float radius, Material* m) : m_center(center), m_radius(radius), m_matPtr(m) {};
     Vec3 getCenter() const
     {
         return m_center;
@@ -21,7 +23,7 @@ public:
         return m_radius;
     }
 
-    bool isIntersecting(const Ray& ray, float tmin, float tmax, hit_record& rec) const
+    bool isIntersecting(const Ray& ray, float tmin, float tmax, HitRecord& rec) const
     {
         Vec3 origin2center = ray.getOrigin() - m_center;
         float a = ray.getDirection().dot(ray.getDirection());
@@ -37,6 +39,7 @@ public:
                 rec.t = temp;
                 rec.p = ray.pointAtT(rec.t);
                 rec.normal = (rec.p - m_center)/m_radius;
+                rec.mat_ptr = this->m_matPtr;
                 return true;
             }
             temp = (-b - std::sqrt(b*b - a*c)) / a;
@@ -45,6 +48,7 @@ public:
                 rec.t = temp;
                 rec.p = ray.pointAtT(rec.t);
                 rec.normal = (rec.p - m_center) / m_radius;
+                rec.mat_ptr = this->m_matPtr;
                 return true;
             }
         }

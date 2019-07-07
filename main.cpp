@@ -1,18 +1,34 @@
 #include <iostream>
 #include "Sphere.h"
 #include "HitableList.h"
-#include "limits"
+#include "Material.h"
+#include "Metal.h"
+#include "Lambertian.h"
 #include "Camera.h"
+#include "Vec3.h"
 
 #include <time.h>
 #include <cstdlib>
+#include <limits>
 
-using namespace toyrenderer;
-Vec3 color(const Ray& r, Hitable *world)
+using namespace ToyRenderer;
+
+Vec3 color(const Ray& r, Hitable *world, int depth)
 {
-    hit_record rec;
-    if(world->isIntersecting(r, 0.0f, std::numeric_limits<float>::max(), rec))
-        return 0.5 * Vec3(rec.normal.x() + 1, rec.normal.y() + 1, rec.normal.z() + 1 );
+    HitRecord rec;
+    if(world->isIntersecting(r, 0.001f, std::numeric_limits<float>::max(), rec))
+    {
+        Ray scattered;
+        Vec3 attenutaion;
+        if(depth < 50 && rec.mat_ptr->scatter(r, rec, attenutaion, scattered))
+        {
+            return attenutaion * color(scattered, world, depth + 1);
+        }
+        else
+        {
+            return Vec3(0,0,0);
+        }
+    }
     else
     {
         Vec3 unit_direction = r.getDirection().unit_vector();
@@ -20,13 +36,6 @@ Vec3 color(const Ray& r, Hitable *world)
         return (1.0 - t) * Vec3(1.0, 1.0, 1.0) + t * Vec3(0.5, 0.7, 1.0);
     }
 
-}
-
-float rand0_1()
-{
-    srand( time(NULL) );
-    float x = (float) rand() / (RAND_MAX + 1.0);
-    return x;
 }
 
 int main()
@@ -42,34 +51,37 @@ int main()
     Vec3 vertical(0.0, 2.0, 0.0);
     Vec3 origin(0.0, 0.0, 0.0);
 
-    Hitable *list[2];
-    list[0] = new Sphere(Vec3(0, 0, -1), 0.5);
-    list[1] = new Sphere(Vec3(0, -100.5, -1), 100);
-    Hitable *world = new HitableList(list, 2);
+    Hitable *list[4];
+    list[0] = new Sphere(Vec3(0, 0, -1), 0.5, new Lambertian(Vec3(0.8, 0.3, 0.3)));
+    list[1] = new Sphere(Vec3(0, -100.5, -1), 100, new Lambertian(Vec3(0.8, 0.8, 0.0)));
+    list[2] = new Sphere(Vec3(1, 0, -1), 0.5, new Metal(Vec3(0.8, 0.6, 0.2), 0.0f));
+    list[3] = new Sphere(Vec3(-1, 0, -1), 0.5, new Metal(Vec3(0.8, 0.8, 0.8), 0.0f));
+
+    Hitable *world = new HitableList(list, 4);
     Camera camera;
 
 
 
-    for(int i = ny-1; i >=0 ; i--)
+    for(int j = ny-1; j >=0 ; j--)
     {
-        for(int j = 0; j < nx ;j++)
+        for(int i = 0; i < nx ; i++)
         {
             Vec3 col(0, 0, 0);
             for(int s = 0; s < ns; s++)
             {
-                real u = real(i + rand0_1()) / real(nx);
-                real v = real(j + rand0_1()) / real(ny);
+                float u = float(i + rand0_1()) / float(nx);
+                float v = float(j + rand0_1()) / float(ny);
                 Ray r = camera.getRay(u, v);
                 Vec3 p = r.pointAtT(2.0);
-                col += color(r, world);
+                col += color(r, world, 0);
             }
             col /= float(ns);
-
+            col = Vec3( std::sqrt(col.x()), std::sqrt(col.y()), std::sqrt(col.z()));
             int ir = int(255.99 * col.x());
             int ig = int(255.99 * col.y()); 
             int ib = int(255.99 * col.z());
 
-            std::cout << ir << " " << ig << " " << ib << std::endl;
+            std::cout << ir << " " << ig << " " << ib << "\n";
         }
     }
     return 0;
