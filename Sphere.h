@@ -27,14 +27,14 @@ public:
     {
         Vec3 origin2center = ray.getOrigin() - m_center;
         float a = ray.getDirection().dot(ray.getDirection());
-        float b = 2.0f * origin2center.dot(ray.getDirection());
+        float b = origin2center.dot(ray.getDirection());
         float c = origin2center.dot(origin2center) - m_radius * m_radius;
-        float discriminant = b*b - 4*a*c;
+        float discriminant = b*b - a*c;
 
         if(discriminant>0)
         {
             float temp = (-b - std::sqrt(b*b - a*c)) / a;
-            if(temp < tmin && temp > tmax)
+            if(temp < tmax && temp > tmin)
             {
                 rec.t = temp;
                 rec.p = ray.pointAtT(rec.t);
@@ -42,7 +42,7 @@ public:
                 rec.mat_ptr = this->m_matPtr;
                 return true;
             }
-            temp = (-b - std::sqrt(b*b - a*c)) / a;
+            temp = (-b + std::sqrt(b*b - a*c)) / a;
             if(temp < tmax && temp > tmin)
             {
                 rec.t = temp;

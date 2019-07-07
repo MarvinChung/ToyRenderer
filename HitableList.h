@@ -25,7 +25,6 @@ bool HitableList::isIntersecting(const Ray& input_ray, float tmin, float tmax, H
             hit_anything = true;
             closest_so_far = temp_rec.t;
             rec=temp_rec;
-            std::cout << i << std::endl;
         }
     }
     return hit_anything;

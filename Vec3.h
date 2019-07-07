@@ -140,7 +140,7 @@ inline std::istream& operator>>(std::istream& is, Vec3& t)
 
 inline std::ostream& operator<<(std::ostream& os, const Vec3& t)
 {
-    os << t.m_e[0] << t.m_e[1] << t.m_e[2];
+    os << t.m_e[0] << " " << t.m_e[1] <<" " << t.m_e[2];
     return os;
 }
 

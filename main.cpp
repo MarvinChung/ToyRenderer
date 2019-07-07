@@ -1,7 +1,6 @@
 #include <iostream>
 #include "Sphere.h"
 #include "HitableList.h"
-#include "Material.h"
 #include "Metal.h"
 #include "Lambertian.h"
 #include "Camera.h"
@@ -19,10 +18,11 @@ Vec3 color(const Ray& r, Hitable *world, int depth)
     if(world->isIntersecting(r, 0.001f, std::numeric_limits<float>::max(), rec))
     {
         Ray scattered;
-        Vec3 attenutaion;
-        if(depth < 50 && rec.mat_ptr->scatter(r, rec, attenutaion, scattered))
+        Vec3 attenuation;
+        if(depth < 50 && rec.mat_ptr->scatter(r, rec, attenuation, scattered))
         {
-            return attenutaion * color(scattered, world, depth + 1);
+           	//std::cout << "atten" << attenuation << std::endl;
+		   	return attenuation * color(scattered, world, depth + 1);
         }
         else
         {
@@ -54,8 +54,8 @@ int main()
     Hitable *list[4];
     list[0] = new Sphere(Vec3(0, 0, -1), 0.5, new Lambertian(Vec3(0.8, 0.3, 0.3)));
     list[1] = new Sphere(Vec3(0, -100.5, -1), 100, new Lambertian(Vec3(0.8, 0.8, 0.0)));
-    list[2] = new Sphere(Vec3(1, 0, -1), 0.5, new Metal(Vec3(0.8, 0.6, 0.2), 0.0f));
-    list[3] = new Sphere(Vec3(-1, 0, -1), 0.5, new Metal(Vec3(0.8, 0.8, 0.8), 0.0f));
+    list[2] = new Sphere(Vec3(1, 0, -1), 0.5, new Metal(Vec3(0.8, 0.6, 0.2), 0.3f));
+    list[3] = new Sphere(Vec3(-1, 0, -1), 0.5, new Metal(Vec3(0.8, 0.8, 0.8), 0.1f));
 
     Hitable *world = new HitableList(list, 4);
     Camera camera;
@@ -69,8 +69,8 @@ int main()
             Vec3 col(0, 0, 0);
             for(int s = 0; s < ns; s++)
             {
-                float u = float(i + rand0_1()) / float(nx);
-                float v = float(j + rand0_1()) / float(ny);
+                float u = float(i + drand48()) / float(nx);
+                float v = float(j + drand48()) / float(ny);
                 Ray r = camera.getRay(u, v);
                 Vec3 p = r.pointAtT(2.0);
                 col += color(r, world, 0);
