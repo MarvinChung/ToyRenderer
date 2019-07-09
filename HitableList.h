@@ -12,11 +12,10 @@ class HitableList : public Hitable
 
 };
 
-bool HitableList::isIntersecting(const Ray& input_ray, float tmin, float tmax, HitRecord& rec) const
+bool HitableList::isIntersecting(const Ray& ray, float tmin, float tmax, HitRecord& rec) const
 {
     HitRecord temp_rec;
     bool hit_anything = false;
-    Ray ray = input_ray;
     double closest_so_far = tmax;
     for ( int  i = 0; i < m_listSize ; i ++)
     {

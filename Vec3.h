@@ -5,7 +5,6 @@
 namespace ToyRenderer
 {
 
-typedef float real;
 
 class Vec3
 {
@@ -108,7 +107,7 @@ class Vec3
 
         inline Vec3 unit_vector() const
         {
-            float k = 1.0/sqaredLength();
+            float k = 1.0/length();
             Vec3 temp;
             temp.m_e[0] = m_e[0] * k;
             temp.m_e[1] = m_e[1] * k;

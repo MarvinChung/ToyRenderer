@@ -11,7 +11,7 @@ private:
     Material *m_matPtr;
 public:
     Sphere():m_center(Vec3(0,0,0)), m_radius(0){};
-    Sphere(Vec3 center, float radius) : m_center(center), m_radius(radius){};
+    //Sphere(Vec3 center, float radius) : m_center(center), m_radius(radius){};
     Sphere(Vec3 center, float radius, Material* m) : m_center(center), m_radius(radius), m_matPtr(m) {};
     Vec3 getCenter() const
     {
@@ -25,7 +25,7 @@ public:
 
     bool isIntersecting(const Ray& ray, float tmin, float tmax, HitRecord& rec) const
     {
-        Vec3 origin2center = ray.getOrigin() - m_center;
+		Vec3 origin2center = ray.getOrigin() - m_center;
         float a = ray.getDirection().dot(ray.getDirection());
         float b = origin2center.dot(ray.getDirection());
         float c = origin2center.dot(origin2center) - m_radius * m_radius;
@@ -33,7 +33,7 @@ public:
 
         if(discriminant>0)
         {
-            float temp = (-b - std::sqrt(b*b - a*c)) / a;
+            float temp = (-b - std::sqrt(discriminant)) / a;
             if(temp < tmax && temp > tmin)
             {
                 rec.t = temp;

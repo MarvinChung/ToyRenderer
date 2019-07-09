@@ -10,7 +10,7 @@ class Ray{
         Vec3 m_direction;
     public:
         Ray(){};
-        Ray(const Vec3& a, const Vec3& b)
+        Ray(const Vec3 a, const Vec3 b)
         {
             m_origin = a;
             m_direction = b;

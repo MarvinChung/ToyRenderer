@@ -2,6 +2,7 @@
 #include "Vec3.h"
 #include "Ray.h"
 #include "Material.h"
+
 namespace ToyRenderer{
 class Hitable
 {
